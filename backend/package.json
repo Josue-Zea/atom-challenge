@@ -8,6 +8,7 @@
     "serve": "firebase serve",
     "deploy": "firebase deploy",
     "start": "ts-node src/index.ts",
+    "dev": "nodemon src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,7 +18,9 @@
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
-    "firebase": "^11.2.0"
+    "express-validator": "^7.2.1",
+    "firebase": "^11.2.0",
+    "jsonwebtoken": "^9.0.2"
   },
   "devDependencies": {
     "@types/cors": "^2.8.17",
