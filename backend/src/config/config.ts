@@ -10,6 +10,12 @@ export const FIREBASE_VARIABLES = {
     FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || ''
 }
 
+export const SERVER = {
+    SERVER_PORT: process.env.SERVER_PORT || 3000,
+    JWT_KEY: process.env.JWT_KEY || "9e46b0d694484240a054fc89d857c9d2"
+}
+
 module.exports = {
-    FIREBASE_VARIABLES
+    FIREBASE_VARIABLES,
+    SERVER
 }
