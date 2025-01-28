@@ -6,9 +6,9 @@ import { validateTaskId } from "../validators/TaskIdValidator";
 
 const router = Router();
 
-router.post("/tasks", checkAuth, validateTask, createTask);
-router.get("/tasks", checkAuth, getTasks);
-router.put("/tasks/:taskId", checkAuth, validateTask, updateTask);
-router.delete("/tasks/:taskId", checkAuth, validateTaskId, deleteTask);
+router.post("/", checkAuth, validateTask, createTask);
+router.get("/", checkAuth, getTasks);
+router.put("/:taskId", checkAuth, validateTask, updateTask);
+router.delete("/:taskId", checkAuth, validateTaskId, deleteTask);
 
 export default router;
