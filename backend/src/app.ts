@@ -4,6 +4,7 @@ import taskRoutes from "./routes/task.routes";
 import healthRoutes from "./routes/health.routes";
 import authRoutes from "./routes/auth.routes";
 import { errorHandler } from "./middlewares/errorHandler";
+import { requestHandler } from "./middlewares/requestHandler";
 
 const app = express();
 
@@ -11,12 +12,15 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Rutas
+// Middleware to handle and log errors
+app.use(errorHandler);
+
+// Middleware to log requests
+app.use(requestHandler);
+
+// Routes
 app.use("/tasks", taskRoutes);
 app.use("/health", healthRoutes);
 app.use("/users", authRoutes);
-
-// Middleware de manejo de errores
-app.use(errorHandler);
 
 export default app;

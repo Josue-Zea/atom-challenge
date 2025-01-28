@@ -1,9 +1,13 @@
+// src/controllers/taskController.ts
 import { Request, Response } from "express";
-import { db } from "../config/firebase";
-import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
-import { Task } from "../models/task.model";
 import { getPayloadToken } from "../helpers/getPayloadToken";
-import { COLLECTIONS } from "../config/config";
+import {
+    createTask as createTaskService,
+    getTasks as getTasksService,
+    updateTask as updateTaskService,
+    deleteTask as deleteTaskService,
+} from "../services/task.service";
+import { Task } from "../models/task.model";
 
 // Create a task
 export const createTask = async (req: Request, res: Response) => {
@@ -13,21 +17,14 @@ export const createTask = async (req: Request, res: Response) => {
         const payload = getPayloadToken(token);
 
         if (payload === null || typeof payload === "string") {
-            res.status(401).send({ message: "No autorizado" });
+            res.status(401).send({ message: "Not authorized" });
             return;
         }
 
-        const tasksCollectionRef = collection(
-            db,
-            COLLECTIONS.USERS_COLLECTION,
-            payload.id,
-            COLLECTIONS.TASKS_COLLECTION
-        );
-        const newTask = await addDoc(tasksCollectionRef, { ...task });
+        const newTask = await createTaskService(payload.id, task);
         res.status(201).send({ taskId: newTask.id, ...task });
-        return;
     } catch (error) {
-        res.status(500).send({ message: "Error al crear la tarea", error });
+        res.status(500).send({ message: "Error while creating task", error });
     }
 };
 
@@ -38,31 +35,18 @@ export const getTasks = async (req: Request, res: Response) => {
         const payload = getPayloadToken(token);
 
         if (payload === null || typeof payload === "string") {
-            res.status(401).send({ message: "No autorizado" });
+            res.status(401).send({ message: "Not authorized" });
             return;
         }
 
-        const tasksCollectionRef = collection(
-            db,
-            COLLECTIONS.USERS_COLLECTION,
-            payload.id,
-            COLLECTIONS.TASKS_COLLECTION
-        );
-
-        const tasksSnapshot = await getDocs(tasksCollectionRef);
-
-        const tasks: Record<string, any> = {};
-        tasksSnapshot.forEach((doc) => {
-            tasks[doc.id] = doc.data();
-        });
-
+        const tasks = await getTasksService(payload.id);
         res.status(200).send({ tasks });
     } catch (error) {
-        res.status(500).send({ message: "Error al obtener las tareas", error });
+        res.status(500).send({ message: "Error while retrieving tasks", error });
     }
 };
 
-// Update an specific task
+// Update a specific task
 export const updateTask = async (req: Request, res: Response) => {
     try {
         const { taskId } = req.params;
@@ -71,26 +55,18 @@ export const updateTask = async (req: Request, res: Response) => {
         const payload = getPayloadToken(token);
 
         if (payload === null || typeof payload === "string") {
-            res.status(401).send({ message: "Not allowed" });
+            res.status(401).send({ message: "Not authorized" });
             return;
         }
 
-        const taskDocRef = doc(
-            db,
-            COLLECTIONS.USERS_COLLECTION,
-            payload.id,
-            COLLECTIONS.TASKS_COLLECTION,
-            taskId
-        );
-
-        await updateDoc(taskDocRef, updatedData);
-        res.status(200).send({ message: "Task updated succesfully" });
+        await updateTaskService(payload.id, taskId, updatedData);
+        res.status(200).send({ message: "Task updated successfully" });
     } catch (error) {
-        res.status(500).send({ message: "Error during updating", error });
+        res.status(500).send({ message: "Error while updating task", error });
     }
 };
 
-// Delete an specific task
+// Delete a specific task
 export const deleteTask = async (req: Request, res: Response) => {
     try {
         const { taskId } = req.params;
@@ -98,21 +74,13 @@ export const deleteTask = async (req: Request, res: Response) => {
         const payload = getPayloadToken(token);
 
         if (payload === null || typeof payload === "string") {
-            res.status(401).send({ message: "Not allowed" });
+            res.status(401).send({ message: "Not authorized" });
             return;
         }
 
-        const taskDocRef = doc(
-            db,
-            COLLECTIONS.USERS_COLLECTION,
-            payload.id,
-            COLLECTIONS.TASKS_COLLECTION,
-            taskId
-        );
-
-        await deleteDoc(taskDocRef);
-        res.status(200).send({ message: "Task deleted succesfully" });
+        await deleteTaskService(payload.id, taskId);
+        res.status(200).send({ message: "Task deleted successfully" });
     } catch (error) {
-        res.status(500).send({ message: "Error during deleting a task", error });
+        res.status(500).send({ message: "Error while deleting task", error });
     }
 };
