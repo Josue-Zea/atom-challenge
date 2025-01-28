@@ -15,7 +15,13 @@ export const SERVER = {
     JWT_KEY: process.env.JWT_KEY || "9e46b0d694484240a054fc89d857c9d2"
 }
 
+export const COLLECTIONS = {
+    USERS_COLLECTION: process.env.USERS_COLLECTION || "users",
+    TASKS_COLLECTION: process.env.TASKS_COLLECTION || "tasks"
+}
+
 module.exports = {
     FIREBASE_VARIABLES,
-    SERVER
+    SERVER,
+    COLLECTIONS
 }

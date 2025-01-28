@@ -12,7 +12,7 @@ app.use(cors());
 app.use(express.json());
 
 // Rutas
-app.use("/api", taskRoutes);
+app.use("/tasks", taskRoutes);
 app.use("/health", healthRoutes);
 app.use("/users", authRoutes);
 

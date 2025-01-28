@@ -1,50 +1,118 @@
 import { Request, Response } from "express";
-// import { db } from "../config/firebase";
+import { db } from "../config/firebase";
+import { collection, addDoc, getDocs, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { Task } from "../models/task.model";
+import { getPayloadToken } from "../helpers/getPayloadToken";
+import { COLLECTIONS } from "../config/config";
 
-// Crear una tarea
+// Create a task
 export const createTask = async (req: Request, res: Response) => {
     try {
         const task: Task = req.body;
-        // const newTask = await db.collection("tasks").add(task);
-        // res.status(201).json({ id: newTask.id, ...task });
-        res.status(201).json({ id: 1, ...task });
+        const token: string = req.headers.authorization?.split(" ").pop() || "";
+        const payload = getPayloadToken(token);
+
+        if (payload === null || typeof payload === "string") {
+            res.status(401).send({ message: "No autorizado" });
+            return;
+        }
+
+        const tasksCollectionRef = collection(
+            db,
+            COLLECTIONS.USERS_COLLECTION,
+            payload.id,
+            COLLECTIONS.TASKS_COLLECTION
+        );
+        const newTask = await addDoc(tasksCollectionRef, { ...task });
+        res.status(201).send({ taskId: newTask.id, ...task });
+        return;
     } catch (error) {
-        res.status(500).json({ message: "Error al crear la tarea", error });
+        res.status(500).send({ message: "Error al crear la tarea", error });
     }
 };
 
-// Obtener todas las tareas
+// Get all user´s tasks
 export const getTasks = async (req: Request, res: Response) => {
     try {
-        // const tasksSnapshot = await db.collection("tasks").get();
-        // const tasks = tasksSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        // res.status(200).json(tasks);
-        res.status(200).json([]);
+        const token: string = req.headers.authorization?.split(" ").pop() || "";
+        const payload = getPayloadToken(token);
+
+        if (payload === null || typeof payload === "string") {
+            res.status(401).send({ message: "No autorizado" });
+            return;
+        }
+
+        const tasksCollectionRef = collection(
+            db,
+            COLLECTIONS.USERS_COLLECTION,
+            payload.id,
+            COLLECTIONS.TASKS_COLLECTION
+        );
+
+        const tasksSnapshot = await getDocs(tasksCollectionRef);
+
+        const tasks: Record<string, any> = {};
+        tasksSnapshot.forEach((doc) => {
+            tasks[doc.id] = doc.data();
+        });
+
+        res.status(200).send({ tasks });
     } catch (error) {
-        res.status(500).json({ message: "Error al obtener las tareas", error });
+        res.status(500).send({ message: "Error al obtener las tareas", error });
     }
 };
 
-// Actualizar una tarea
+// Update an specific task
 export const updateTask = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        const task: Partial<Task> = req.body;
-        // await db.collection("tasks").doc(id).update(task);
-        res.status(200).json({ id, ...task });
+        const { taskId } = req.params;
+        const updatedData: Partial<Task> = req.body;
+        const token: string = req.headers.authorization?.split(" ").pop() || "";
+        const payload = getPayloadToken(token);
+
+        if (payload === null || typeof payload === "string") {
+            res.status(401).send({ message: "Not allowed" });
+            return;
+        }
+
+        const taskDocRef = doc(
+            db,
+            COLLECTIONS.USERS_COLLECTION,
+            payload.id,
+            COLLECTIONS.TASKS_COLLECTION,
+            taskId
+        );
+
+        await updateDoc(taskDocRef, updatedData);
+        res.status(200).send({ message: "Task updated succesfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error al actualizar la tarea", error });
+        res.status(500).send({ message: "Error during updating", error });
     }
 };
 
-// Eliminar una tarea
+// Delete an specific task
 export const deleteTask = async (req: Request, res: Response) => {
     try {
-        const { id } = req.params;
-        // await db.collection("tasks").doc(id).delete();
-        res.status(200).json({ message: `Tarea con ID ${id} eliminada` });
+        const { taskId } = req.params;
+        const token: string = req.headers.authorization?.split(" ").pop() || "";
+        const payload = getPayloadToken(token);
+
+        if (payload === null || typeof payload === "string") {
+            res.status(401).send({ message: "Not allowed" });
+            return;
+        }
+
+        const taskDocRef = doc(
+            db,
+            COLLECTIONS.USERS_COLLECTION,
+            payload.id,
+            COLLECTIONS.TASKS_COLLECTION,
+            taskId
+        );
+
+        await deleteDoc(taskDocRef);
+        res.status(200).send({ message: "Task deleted succesfully" });
     } catch (error) {
-        res.status(500).json({ message: "Error al eliminar la tarea", error });
+        res.status(500).send({ message: "Error during deleting a task", error });
     }
 };
