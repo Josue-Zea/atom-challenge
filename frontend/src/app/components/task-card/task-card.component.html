@@ -15,18 +15,20 @@
     </label>
 
     <div class="flex space-x-2">
-      <button
-        (click)="editCurrentTask(task)"
-        class="text-blue-600"
-      >
-        <mat-icon class="text-lg">edit</mat-icon>
-      </button>
-      <button
-        (click)="deleteTask(task.taskId)"
-        class="text-red-600"
-      >
-        <mat-icon class="text-lg">delete</mat-icon>
-      </button>
+      <div *ngIf="!task.completed">
+        <button
+          (click)="editCurrentTask(task)"
+          class="text-blue-600"
+        >
+          <mat-icon class="text-lg">edit</mat-icon>
+        </button>
+        <button
+          (click)="deleteTask(task.taskId)"
+          class="text-red-600"
+        >
+          <mat-icon class="text-lg">delete</mat-icon>
+        </button>
+      </div>
     </div>
   </div>
 

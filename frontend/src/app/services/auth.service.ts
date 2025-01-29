@@ -88,4 +88,10 @@ export class AuthService {
         SmallIconAllert('success', 'Sesión cerrada exitosamente');
         this._router.navigate(['/login']);
     }
+
+    sesionExpired(): void {
+        this.removeAuthAccessToken();
+        SmallIconAllert('info', 'Tu sesión ha expirado');
+        this._router.navigate(['/login']);
+    }
 }

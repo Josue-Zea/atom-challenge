@@ -1,26 +1,25 @@
 <div class="flex justify-between items-center">
-    <ng-container *ngIf="filteredTasks.length > 0; else noTasks">
-      <span class="mb-2 text-sm">
-        {{ showCompleted ?
-          "Tareas completadas: " + completedTasksCount :
-          'Tareas pendientes: ' + pendingTasksCount
-        }}
-      </span>
-    </ng-container>
-    <ng-template #noTasks>
-      <span class="mb-2 text-sm text-gray-500">
-        {{ showCompleted ? 'No hay tareas completadas' : 'No hay tareas pendientes' }}
-      </span>
-    </ng-template>
-    
-    <label class="flex items-center cursor-pointer">
-      <span class="mr-2 text-sm">Ver tareas completadas</span>
-      <input type="checkbox" class="hidden" (change)="toggleShowCompleted()" />
-      <div class="w-10 h-5 bg-gray-300 rounded-full relative">
-        <div
-          class="w-5 h-5 bg-white rounded-full absolute left-0 transition-all duration-300"
-          [ngClass]="{ 'translate-x-5 bg-green-500': showCompleted }"
-        ></div>
-      </div>
-    </label>
-  </div>
+  <ng-container *ngIf="filteredTasks.length > 0; else noTasks">
+    <span class="mb-2 text-sm">
+      {{ showCompleted ?
+      "Tareas completadas: " + completedTasksCount :
+      'Tareas pendientes: ' + pendingTasksCount
+      }}
+    </span>
+  </ng-container>
+  <ng-template #noTasks>
+    <span class="mb-2 text-sm text-gray-500">
+      {{ showCompleted ? 'No hay tareas completadas' : 'No hay tareas pendientes' }}
+    </span>
+  </ng-template>
+
+  <label class="flex items-center cursor-pointer">
+    <span class="mr-2 text-sm">Ver tareas completadas</span>
+    <input type="checkbox" class="hidden" (change)="toggleShowCompleted()" />
+    <div class="w-10 h-5 rounded-full relative"
+      [ngClass]="{ 'bg-blue-500': showCompleted, 'bg-gray-300': !showCompleted }">
+      <div class="w-5 h-5 bg-white rounded-full absolute left-0 transition-all duration-300"
+        [ngClass]="{ 'translate-x-5 bg-green-500': showCompleted }"></div>
+    </div>
+  </label>
+</div>

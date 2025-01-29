@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { TasksService } from 'src/app/services/tasks.service';
 import { ApiResponse } from 'src/app/types/response-api.type';
 import { Task } from 'src/app/types/task.type';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-dashboard',
@@ -11,10 +12,10 @@ import { Task } from 'src/app/types/task.type';
 })
 export class DashboardComponent {
   tasks: Task[] = [];
-  isEditing: boolean = false;
+  isEditing = false;
   taskToEdit: Task | null = null;
-  loading: boolean = false;
-  showCompleted: boolean = false;
+  loading = false;
+  showCompleted = false;
 
   constructor(
     private _tasksService: TasksService,
@@ -28,8 +29,8 @@ export class DashboardComponent {
     if (!token) { return; }
     this.loading = true;
     this._tasksService.getTasks(token)
+      .pipe(finalize(() => this.loading = false))
       .subscribe(async (res: Task[] | ApiResponse) => {
-        this.loading = false;
         if ((res as ApiResponse).status === 500) {
           SmallIconAllert('error', 'Ha ocurrido un error al cargar las tareas');
           return;
@@ -52,14 +53,6 @@ export class DashboardComponent {
 
     this.isEditing = false;
     this.taskToEdit = null;
-  }
-
-  get pendingTasksCount(): number {
-    return this.tasks.filter(task => !task.completed).length;
-  }
-
-  get completedTasksCount(): number {
-    return this.tasks.filter(task => task.completed).length;
   }
 
   get filteredTasks(): Task[] {

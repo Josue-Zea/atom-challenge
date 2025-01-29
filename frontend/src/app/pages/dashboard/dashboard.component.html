@@ -22,32 +22,11 @@
 
     <!-- Tasks section -->
     <div class="w-full lg:w-2/3 mx-2">
-      <div class="flex justify-between items-center">
-        <ng-container *ngIf="filteredTasks.length > 0; else noTasks">
-          <span class="mb-2 text-sm">
-            {{ showCompleted ?
-              "Tareas completadas: " + completedTasksCount :
-              'Tareas pendientes: ' + pendingTasksCount
-            }}
-          </span>
-        </ng-container>
-        <ng-template #noTasks>
-          <span class="mb-2 text-sm text-gray-500">
-            {{ showCompleted ? 'No hay tareas completadas' : 'No hay tareas pendientes' }}
-          </span>
-        </ng-template>
-        
-        <label class="flex items-center cursor-pointer">
-          <span class="mr-2 text-sm">Ver tareas completadas</span>
-          <input type="checkbox" class="hidden" (change)="toggleShowCompleted()" />
-          <div class="w-10 h-5 bg-gray-300 rounded-full relative">
-            <div
-              class="w-5 h-5 bg-white rounded-full absolute left-0 transition-all duration-300"
-              [ngClass]="{ 'translate-x-5 bg-green-500': showCompleted }"
-            ></div>
-          </div>
-        </label>
-      </div>
+      <app-tasks-list-header
+        [filteredTasks]="filteredTasks"
+        [showCompleted]="showCompleted"
+        (toggleShowPending)="toggleShowCompleted()"
+      ></app-tasks-list-header>
 
       <div
         *ngIf="filteredTasks.length > 0"
@@ -70,15 +49,12 @@
 
       <div *ngIf="filteredTasks.length > 0" class="h-10"></div>
 
-      <p *ngIf="filteredTasks.length === 0 && showCompleted" class="text-gray-600 text-center mt-6 flex flex-col items-center">
-        <span class="text-lg font-semibold">¡Aun no tienes tareas completadas!</span>
-        <span class="text-sm text-gray-500">Marcalas como completadas para poder verlas aquí.</span>
-      </p>
-
-      <p *ngIf="filteredTasks.length === 0 && !showCompleted" class="text-gray-600 text-center mt-6 flex flex-col items-center">
-        <span class="text-lg font-semibold">¡Genial!</span>
-        <span class="text-sm text-gray-500">No tienes tareas pendientes por completar.</span>
-      </p>
+      <div>
+        <app-task-empty-messages
+          [filteredTasks]="filteredTasks"
+          [showCompleted]="showCompleted"
+        ></app-task-empty-messages>
+      </div>
     </div>
   </div>
 </div>

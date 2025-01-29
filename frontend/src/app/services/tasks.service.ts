@@ -20,7 +20,7 @@ export class TasksService {
         private _httpErrorHandler: ErrorHandlerService
     ) { }
 
-    setTasks(tasks: Task[]): void {
+    private setTasks(tasks: Task[]): void {
         localStorage.setItem(TASKS_KEY_NAME, JSON.stringify(tasks));
     }
 
@@ -30,9 +30,7 @@ export class TasksService {
 
     getTasks(token: string): Observable<Task[] | ApiResponse> {
         return this._httpClient.get<Task[]>(this.API_URL, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` }
         }).pipe(
             tap(this.setTasks),
             catchError(
@@ -43,15 +41,9 @@ export class TasksService {
 
     createTask(task: Task, token: string): Observable<Task | ApiResponse> {
         return this._httpClient.post<Task>(this.API_URL, task, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` }
         }).pipe(
-            tap((newTask) => {
-                const tasks = JSON.parse(localStorage.getItem(TASKS_KEY_NAME) || '[]');
-                tasks.push(newTask);
-                this.setTasks(tasks);
-            }),
+            tap(newTask => this.setTasks([...this.getTasksFromLocalStorage(), newTask])),
             catchError(
                 error => this._httpErrorHandler.handleErrorHttpRequest(error)
             )
@@ -60,11 +52,9 @@ export class TasksService {
 
     editTask(taskId: string, task: Task, token: string): Observable<Task | ApiResponse> {
         return this._httpClient.put<Task>(`${this.API_URL}/${taskId}`, task, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
+            headers: { Authorization: `Bearer ${token}` }
         }).pipe(
-            tap((_) => {
+            tap(() => {
                 const tasks = JSON.parse(localStorage.getItem(TASKS_KEY_NAME) || '[]');
                 const taskIndex = tasks.findIndex((t: Task) => t.taskId === taskId);
                 tasks[taskIndex] = task;
@@ -82,7 +72,7 @@ export class TasksService {
                 Authorization: `Bearer ${token}`,
             },
         }).pipe(
-            tap((_) => {
+            tap(() => {
                 const tasks = JSON.parse(localStorage.getItem(TASKS_KEY_NAME) || '[]');
                 const taskIndex = tasks.findIndex((t: Task) => t.taskId === taskId);
                 tasks.splice(taskIndex, 1);

@@ -1,36 +1,43 @@
 <div class="flex justify-center items-center min-h-screen bg-gray-100">
-    <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md">
-      <h1 class="text-2xl font-bold text-blue-700 text-center">Atom challenge</h1>
-      <h3 class="text-sm font-bold text-blue-600 text-center mb-6">Bienvenido</h3>
-      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
-        <!-- Email Field -->
-        <div>
-          <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+  <div class="w-full max-w-md p-6 bg-white rounded-lg shadow-md transition-all duration-300 hover:shadow-lg">
+    <h1 class="text-3xl font-extrabold text-blue-700 text-center">🚀 Atom Challenge</h1>
+    <h3 class="text-sm font-semibold text-blue-600 text-center mb-6">Bienvenido de nuevo 👋</h3>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <!-- Email Field -->
+      <div>
+        <label for="email" class="block text-sm font-medium text-gray-700">📧 Email</label>
+        <div class="relative">
           <input
             id="email"
             formControlName="email"
             type="email"
             maxlength="100"
-            
             required
-            [ngClass]="{'border-red-500': email?.invalid && email?.touched, 'border-green-500': email?.valid && email?.touched}"
-            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-sky-500 focus:outline focus:outline-sky-500 text-sm"
+            [ngClass]="{
+              'border-red-500': email?.invalid && email?.touched, 
+              'border-green-500': email?.valid && email?.touched
+            }"
+            class="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-400 focus:outline-none text-sm transition-all duration-200"
           />
-          <p *ngIf="email?.invalid && email?.touched" class="text-sm text-red-500 mt-1">
-            {{ getEmailErrorMessage() }}
-          </p>
+          <span class="absolute right-3 top-2 text-gray-400">
+            <i class="fas fa-envelope"></i>
+          </span>
         </div>
+        <p *ngIf="email?.invalid && email?.touched" class="text-sm text-red-500 mt-1 animate-pulse">
+          {{ emailErrorMessage }}
+        </p>
+      </div>
 
-  
-        <!-- Submit Button -->
-        <button
-          type="submit"
-          [disabled]="loginForm.invalid || loading"
-          class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg shadow hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-        >
-          {{ loading ? 'Cargando...' : 'Iniciar sesión' }}
-        </button>
-      </form>
-    </div>
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        [disabled]="loginForm.invalid || loading"
+        class="w-full flex justify-center items-center bg-blue-600 text-white font-bold py-2 rounded-lg shadow hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+      >
+        <span *ngIf="!loading">Iniciar sesión</span>
+        <span *ngIf="loading" class="animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full"></span>
+      </button>
+    </form>
   </div>
-  
+</div>

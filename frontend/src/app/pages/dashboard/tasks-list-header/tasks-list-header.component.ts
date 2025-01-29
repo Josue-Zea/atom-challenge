@@ -7,13 +7,19 @@ import { Task } from 'src/app/types/task.type';
 })
 export class TasksListHeaderComponent {
   @Input() showCompleted!: boolean;
-  @Input() pendingTasksCount!: number;
-  @Input() completedTasksCount!: number;
   @Input() filteredTasks!: Task[];
   @Input() showPendingTasks!: boolean;
   @Output() toggleShowPending = new EventEmitter<void>();
 
   toggleShowCompleted(){
     this.toggleShowPending.emit();
+  }
+
+  get pendingTasksCount(): number {
+    return this.filteredTasks.filter(task => !task.completed).length;
+  }
+
+  get completedTasksCount(): number {
+    return this.filteredTasks.filter(task => task.completed).length;
   }
 }
