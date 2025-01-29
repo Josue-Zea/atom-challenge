@@ -15,6 +15,7 @@ export class TaskCardComponent {
   @Output() editTask = new EventEmitter<Task>();
   @Input() loading!: boolean;
   @Output() loadingChange = new EventEmitter<boolean>();
+  @Output() reloadData = new EventEmitter<void>();
 
   constructor(
     private _tasksService: TasksService,
@@ -35,13 +36,13 @@ export class TaskCardComponent {
     const token = this._authService.getToken();
     if (!token) { return; }
     this._tasksService.editTask(this.task.taskId ?? "", task, token)
-    .subscribe(async (res: Task | ApiResponse) => {
-      this.loadingChange.emit(false);
-      if ((res as ApiResponse).status === 500) {
-        SmallIconAllert('error', 'Ha ocurrido un error cambiar el estado de la tarea');
-        return;
-      }
-    });
+      .subscribe(async (res: Task | ApiResponse) => {
+        this.loadingChange.emit(false);
+        if ((res as ApiResponse).status === 500) {
+          SmallIconAllert('error', 'Ha ocurrido un error cambiar el estado de la tarea');
+          return;
+        }
+      });
   }
 
   editCurrentTask(task?: Task): void {
@@ -65,6 +66,7 @@ export class TaskCardComponent {
           return;
         }
         SmallIconAllert('success', 'Tarea eliminada correctamente');
+        this.reloadData.emit();
       })
   }
 }

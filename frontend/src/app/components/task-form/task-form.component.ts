@@ -15,7 +15,8 @@ export class TaskFormComponent {
   @Input() loading!: boolean;
   @Output() loadingChange = new EventEmitter<boolean>();
   @Input() isEditing!: boolean;
-  @Input() taskToEdit: Task | null = null
+  @Input() taskToEdit: Task | null = null;
+  @Output() reloadData = new EventEmitter<void>();
 
   constructor(
     private fb: FormBuilder,
@@ -57,18 +58,9 @@ export class TaskFormComponent {
           return;
         } else {
           SmallIconAllert('success', 'Tarea editada correctamente');
+          this.reloadData.emit();
         }
       });
-
-      // const index = this.tasks.findIndex((t) => t.id === this.taskToEdit?.id);
-      // if (index !== -1) {
-      //   this.tasks[index] = {
-      //     ...this.taskToEdit,
-      //     ...this.taskForm.value,
-      //   };
-      // }
-      // this.isEditing = false;
-      // this.taskToEdit = null;
     } else {
       const newTask: Task = {
         title: this.taskForm.value.title,
@@ -84,11 +76,11 @@ export class TaskFormComponent {
             return;
           } else {
             SmallIconAllert('success', 'Tarea creada correctamente');
+            this.reloadData.emit();
           }
         })
     }
 
-    // this.saveTasks();
-    // this.taskForm.reset();
+    this.taskForm.reset();
   }
 }

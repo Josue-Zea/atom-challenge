@@ -1,0 +1,12 @@
+<nav class="fixed top-0 w-full bg-white shadow-md flex justify-between items-center px-4 py-2">
+    <div class="ml-2 flex items-center gap-2 text-gray-700 text-sm">
+        <mat-icon class="text-blue-500">account_circle</mat-icon>
+        <span class="hidden md:block text-gray-900">{{ email }}</span>
+    </div>
+
+    <button (click)="logout()"
+        class="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">
+        <span class="hidden md:block">Cerrar sesión</span>
+        <mat-icon>logout</mat-icon>
+    </button>
+</nav>
