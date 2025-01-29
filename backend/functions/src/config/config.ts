@@ -2,12 +2,12 @@ import * as dotenv from 'dotenv';
 dotenv.config();
 
 export const FIREBASE_VARIABLES = {
-    FIREBASE_API_KEY: process.env.FIREBASE_API_KEY || '',
-    FIREBASE_AUTH_DOMAIN: process.env.FIREBASE_AUTH_DOMAIN || '',
-    FIREBASE_PROJECT_ID: process.env.FIREBASE_PROJECT_ID || '',
-    FIREBASE_STORAGE_BUDGET: process.env.FIREBASE_STORAGE_BUDGET || '',
-    FIREBASE_MESSAGING_SENDER_ID: process.env.FIREBASE_MESSAGING_SENDER_ID || '',
-    FIREBASE_APP_ID: process.env.FIREBASE_APP_ID || ''
+    FB_API_KEY: process.env.FB_API_KEY || '',
+    FB_AUTH_DOMAIN: process.env.FB_AUTH_DOMAIN || '',
+    FB_PROJECT_ID: process.env.FB_PROJECT_ID || '',
+    FB_STORAGE_BUDGET: process.env.FB_STORAGE_BUDGET || '',
+    FB_MESSAGING_SENDER_ID: process.env.FB_MESSAGING_SENDER_ID || '',
+    FB_APP_ID: process.env.FB_APP_ID || ''
 }
 
 export const SERVER = {

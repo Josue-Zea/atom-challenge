@@ -64,7 +64,6 @@ export class AuthService {
             .pipe(
                 tap((authResponse) => {
                     const data: { email: string } = jwtDecode(authResponse.token);
-                    console.log(data);
                     this.setEmail(data.email);
                     this.setAuthAccessToken(authResponse);
                 }),

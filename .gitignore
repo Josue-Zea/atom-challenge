@@ -147,3 +147,17 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+.angular
+
+.firebase/
+
+# Compiled JavaScript files
+lib/**/*.js
+lib/**/*.js.map
+
+# TypeScript v1 declaration files
+typings/
+
+# Node.js dependency directory
+node_modules/

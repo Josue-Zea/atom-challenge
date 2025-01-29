@@ -31,16 +31,16 @@ export class TaskCardComponent {
   }
 
   toggleTaskStatus(task: Task): void {
-    this.loadingChange.emit(true);
     task.completed = !task.completed;
     const token = this._authService.getToken();
     if (!token) { return; }
     this._tasksService.editTask(this.task.taskId ?? "", task, token)
       .subscribe(async (res: Task | ApiResponse) => {
-        this.loadingChange.emit(false);
         if ((res as ApiResponse).status === 500) {
           SmallIconAllert('error', 'Ha ocurrido un error cambiar el estado de la tarea');
           return;
+        } else {
+          SmallIconAllert('success', 'OK');
         }
       });
   }
