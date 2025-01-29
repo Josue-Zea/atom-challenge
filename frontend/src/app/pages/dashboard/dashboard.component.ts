@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { SmallIconAllert, YesNoAlert } from 'src/app/alerts/alerts';
+import { SmallIconAllert } from 'src/app/alerts/alerts';
 import { AuthService } from 'src/app/services/auth.service';
 import { TasksService } from 'src/app/services/tasks.service';
 import { ApiResponse } from 'src/app/types/response-api.type';
@@ -14,6 +14,7 @@ export class DashboardComponent {
   isEditing: boolean = false;
   taskToEdit: Task | null = null;
   loading: boolean = false;
+  showCompleted: boolean = false;
 
   constructor(
     private _tasksService: TasksService,
@@ -37,10 +38,6 @@ export class DashboardComponent {
       })
   }
 
-  saveTasks(): void {
-    localStorage.setItem('tasks', JSON.stringify(this.tasks));
-  }
-
   onLoadingChange(value: boolean) {
     this.loading = value;
   }
@@ -51,7 +48,25 @@ export class DashboardComponent {
   }
 
   loadTasksFromLocalStorage(): void {
-    const currentTasks = this._tasksService.getTasksFromLocalStorage();
-    this.tasks = [...currentTasks];
+    this.tasks = this._tasksService.getTasksFromLocalStorage();
+
+    this.isEditing = false;
+    this.taskToEdit = null;
+  }
+
+  get pendingTasksCount(): number {
+    return this.tasks.filter(task => !task.completed).length;
+  }
+
+  get completedTasksCount(): number {
+    return this.tasks.filter(task => task.completed).length;
+  }
+
+  get filteredTasks(): Task[] {
+    return this.tasks.filter(task => task.completed === this.showCompleted);
+  }
+
+  toggleShowCompleted(): void {
+    this.showCompleted = !this.showCompleted;
   }
 }
