@@ -44,13 +44,13 @@ export class TaskFormComponent {
     this.loadingChange.emit(true);
     
     if (this.isEditing && this.taskToEdit) {
-      const taskToEdit: Task = {
+      const newTaskToEdit: Task = {
         title: this.taskForm.value.title,
-        description: this.taskForm.value.title,
+        description: this.taskForm.value.description,
         completed: this.taskToEdit.completed,
         creation_date: this.taskToEdit.creation_date,
     }
-      this._tasksService.editTask(this.taskToEdit.taskId ?? "", taskToEdit, token)
+      this._tasksService.editTask(this.taskToEdit.taskId ?? "", newTaskToEdit, token)
       .subscribe(async (res: Task | ApiResponse) => {
         this.loadingChange.emit(false);
         if ((res as ApiResponse).status === 500) {
