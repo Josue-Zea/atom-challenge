@@ -1,47 +1,49 @@
 <div class="min-h-screen bg-gray-100 flex flex-col items-center">
-  <!-- Loader de pantalla completa -->
-  <div *ngIf="loading" class="fixed inset-0 bg-white bg-opacity-75 flex items-center justify-center z-50">
-    <div class="w-16 h-16 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+  <!-- Full screen loader -->
+  <app-fullpage-loader [loading]="loading"></app-fullpage-loader>
+
+  <!-- Sticky navbar -->
+  <div class="fixed top-0 w-full bg-white shadow-md z-50">
+    <app-navbar></app-navbar>
   </div>
 
-  <!-- Navbar fijo -->
-  <nav class="fixed top-0 w-full bg-white shadow-md flex justify-between items-center">
-    <div></div>
-    <button (click)="logout()" class="bg-red-600 text-white px-4 py-2 my-1 rounded-lg hover:bg-red-700">
-      Cerrar sesión
-    </button>
-  </nav>
+  <div class="flex flex-col lg:flex-row gap-4 sm:px-4 md:px-10 lg:px-20 w-full max-w-6xl pt-20">
 
-  <!-- Contenedor principal centrado -->
-  <div class="flex gap-6 px-10 w-full max-w-6xl pt-20">
-    <!-- Sidebar: Formulario de Nueva Tarea -->
-    <div class="w-1/3">
+    <!-- Formtasks -->
+    <div class="w-full lg:w-1/3">
       <app-task-form
         [loading]="loading"
-        (loadingChange)="onLoadingChange($event)"
         [isEditing]="isEditing"
-        [taskToEdit]="taskToEdit"
-      ></app-task-form>
+        [taskToEdit]="taskToEdit" (reloadData)="loadTasksFromLocalStorage()"
+        (loadingChange)="onLoadingChange($event)"
+      >
+      </app-task-form>
     </div>
 
-    <!-- Sección de Tareas -->
-    <div class="w-2/3 h-screen pt-[-20] overflow-y-auto">
-      <!-- Grid de Tareas -->
-      <div *ngIf="tasks.length > 0" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div *ngFor="let task of tasks" class="bg-white p-6 rounded-lg shadow-lg relative border-l-4"
-          [ngClass]="task.completed ? 'border-green-500' : 'border-yellow-500'">
+    <!-- Tasks section -->
+    <div class="w-full lg:w-2/3 h-screen overflow-y-auto">
+      <div *ngIf="tasks.length > 0" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          *ngFor="let task of tasks"
+          class="bg-white p-6 rounded-lg shadow-lg relative border-l-4"
+          [ngClass]="task.completed ? 'border-green-500' : 'border-yellow-500'"
+        >
           <app-task-card
             [task]="task"
             (loadingChange)="onLoadingChange($event)"
+            (reloadData)="loadTasksFromLocalStorage()"
             (editTask)="onEditTask($event)"
-          ></app-task-card>
+          >
+          </app-task-card>
         </div>
       </div>
 
       <div *ngIf="tasks.length > 0" class="h-10"></div>
 
-      <p *ngIf="tasks.length === 0" class="text-gray-600 text-center mt-6">
-        No hay tareas pendientes.
+      <p *ngIf="tasks.length === 0" class="text-gray-600 text-center mt-6 flex flex-col items-center">
+        <mat-icon class="text-blue-400">task_alt</mat-icon>
+        <span class="text-lg font-semibold">¡Todo está en orden!</span>
+        <span class="text-sm text-gray-500">No hay tareas pendientes en este momento.</span>
       </p>
     </div>
   </div>

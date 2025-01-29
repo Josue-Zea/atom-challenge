@@ -10,6 +10,7 @@
             id="email"
             formControlName="email"
             type="email"
+            maxlength="100"
             
             required
             [ngClass]="{'border-red-500': email?.invalid && email?.touched, 'border-green-500': email?.valid && email?.touched}"

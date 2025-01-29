@@ -7,8 +7,11 @@ import { AuthCredentials } from '../types/auth.type';
 import { ErrorHandlerService } from './error-handler.service';
 import { ApiResponse } from '../types/response-api.type';
 import { SmallIconAllert } from '../alerts/alerts';
+import { Router } from '@angular/router';
+import { jwtDecode } from 'jwt-decode';
 
 export const AUTH_KEY_NAME: string = 'authAccessToken';
+export const EMAIL_KEY_NAME: string = 'userEmail';
 
 @Injectable({
     providedIn: 'root',
@@ -18,7 +21,7 @@ export class AuthService {
 
     constructor(
         private _httpClient: HttpClient,
-        //   private _router: Router,
+        private _router: Router,
         private _httpErrorHandler: ErrorHandlerService
     ) { }
 
@@ -26,12 +29,24 @@ export class AuthService {
         localStorage.setItem(AUTH_KEY_NAME, authResponse.token);
     }
 
+    setEmail(email: string): void {
+        localStorage.setItem(EMAIL_KEY_NAME, email);
+    }
+
     removeAuthAccessToken(): void {
         localStorage.removeItem(AUTH_KEY_NAME);
     }
 
+    removeEmail(email: string): void {
+        localStorage.setItem(EMAIL_KEY_NAME, email);
+    }
+
     getToken(): string | null {
         return localStorage.getItem(AUTH_KEY_NAME);
+    }
+
+    getEmail(): string | null {
+        return localStorage.getItem(EMAIL_KEY_NAME);
     }
 
     validateTokenTime(): boolean {
@@ -47,7 +62,12 @@ export class AuthService {
     login(authCredentials: AuthCredentials): Observable<AuthResponse | ApiResponse> {
         return this._httpClient.get<AuthResponse>(this.API_URL + `/${authCredentials.email}`)
             .pipe(
-                tap(this.setAuthAccessToken),
+                tap((authResponse) => {
+                    const data: { email: string } = jwtDecode(authResponse.token);
+                    console.log(data);
+                    this.setEmail(data.email);
+                    this.setAuthAccessToken(authResponse);
+                }),
                 catchError(
                     error => this._httpErrorHandler.handleErrorHttpRequest(error)
                 )
@@ -67,6 +87,6 @@ export class AuthService {
     logout(): void {
         this.removeAuthAccessToken();
         SmallIconAllert('success', 'Sesión cerrada exitosamente');
-        //   this._router.navigate(['/login']);
+        this._router.navigate(['/login']);
     }
 }

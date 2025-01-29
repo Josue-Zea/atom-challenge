@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { SmallIconAllert, YesNoAlert } from 'src/app/alerts/alerts';
 import { AuthService } from 'src/app/services/auth.service';
 import { AuthResponse } from 'src/app/types/auth.response.type';
@@ -15,6 +16,7 @@ export class LoginPageComponent {
 
   constructor(
     private fb: FormBuilder,
+    private _router: Router,
     private _authService: AuthService
   ) {
     this.loginForm = this.fb.group({
@@ -52,7 +54,7 @@ export class LoginPageComponent {
           return;
         } else {
           SmallIconAllert('success', 'Inicio de sesión exitoso');
-          // this._router.navigate(['/dashboard']);
+          this._router.navigate(['/dashboard']);
         }
       });
   }
@@ -67,7 +69,7 @@ export class LoginPageComponent {
           return;
         } else {
           SmallIconAllert('success', 'Inicio de sesión exitoso');
-          // this._router.navigate(['/dashboard']);
+          this._router.navigate(['/dashboard']);
         }
       })
   }

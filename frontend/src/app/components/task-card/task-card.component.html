@@ -1,35 +1,33 @@
 <div>
-    <h3 class="text-lg font-bold text-gray-800">{{ task.title }}</h3>
-    <p class="text-sm text-gray-600 mb-2">{{ task.description }}</p>
-    <p class="text-xs text-gray-400">Creado el: {{ task.creation_date | date }}</p>
+  <h3 class="text-gray-800 text-lg font-bold">{{ task.title }}</h3>
+  <p class="text-sm text-gray-600 mb-2">{{ task.description }}</p>
+  <p class="text-xs text-gray-400">Creado el: {{ task.creation_date | date }}</p>
 
-    <div class="flex items-center justify-between mt-4">
-        <!-- Estado de la tarea -->
-        <label class="flex items-center text-sm font-medium space-x-2">
-          <input
-            type="checkbox"
-            [checked]="task.completed"
-            (change)="toggleTaskStatus(task)"
-            class="w-5 h-5 accent-blue-600 border-gray-400 rounded-md transition-all duration-200 hover:scale-110 focus:ring focus:ring-blue-300"
-          />
-          <span class="text-gray-700">{{ task.completed ? 'Completada' : 'Pendiente' }}</span>
-        </label>
-      
-        <!-- Botones de acción -->
-        <div class="flex space-x-2">
-          <button
-            (click)="editCurrentTask(task)"
-            class="text-blue-600"
-          >
-            <mat-icon class="text-lg">edit</mat-icon>
-          </button>
-          <button
-            (click)="deleteTask(task.taskId)"
-            class="text-red-600"
-          >
-            <mat-icon class="text-lg">delete</mat-icon>
-          </button>
-        </div>
-      </div>
+  <div class="flex items-center justify-between mt-4">
+    <label class="flex items-center text-sm font-medium space-x-2">
+      <input
+        type="checkbox"
+        [checked]="task.completed"
+        (change)="toggleTaskStatus(task)"
+        class="w-5 h-5 accent-blue-600 border-gray-400 rounded-md transition-all duration-200 hover:scale-110 focus:ring focus:ring-blue-300"
+      />
+      <span class="text-gray-700">{{ task.completed ? 'Completada' : 'Pendiente' }}</span>
+    </label>
+
+    <div class="flex space-x-2">
+      <button
+        (click)="editCurrentTask(task)"
+        class="text-blue-600"
+      >
+        <mat-icon class="text-lg">edit</mat-icon>
+      </button>
+      <button
+        (click)="deleteTask(task.taskId)"
+        class="text-red-600"
+      >
+        <mat-icon class="text-lg">delete</mat-icon>
+      </button>
+    </div>
+  </div>
 
 </div>

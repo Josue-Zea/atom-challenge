@@ -12,6 +12,8 @@ import { TaskCardComponent } from './components/task-card/task-card.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatIconModule } from '@angular/material/icon';
 import { TaskFormComponent } from './components/task-form/task-form.component';
+import { FullpageLoaderComponent } from './components/fullpage-loader/fullpage-loader.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 export const CONSTANTS = 'CONSTANTS';
 
@@ -21,7 +23,9 @@ export const CONSTANTS = 'CONSTANTS';
     LoginPageComponent,
     DashboardComponent,
     TaskCardComponent,
-    TaskFormComponent
+    TaskFormComponent,
+    FullpageLoaderComponent,
+    NavbarComponent
   ],
   imports: [
     BrowserModule,

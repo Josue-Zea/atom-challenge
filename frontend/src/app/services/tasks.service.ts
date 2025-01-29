@@ -17,31 +17,15 @@ export class TasksService {
 
     constructor(
         private _httpClient: HttpClient,
-        //   private _router: Router,
         private _httpErrorHandler: ErrorHandlerService
     ) { }
 
     setTasks(tasks: Task[]): void {
-        // const tasks = this.getTasks();
-        localStorage.setItem(TASKS_KEY_NAME, "tasks");
+        localStorage.setItem(TASKS_KEY_NAME, JSON.stringify(tasks));
     }
 
-    removeAuthAccessToken(): void {
-        localStorage.removeItem(TASKS_KEY_NAME);
-    }
-
-    getToken(): string | null {
-        return localStorage.getItem(TASKS_KEY_NAME);
-    }
-
-    validateTokenTime(): boolean {
-        const token = this.getToken();
-        if (!token) {
-            return false;
-        }
-        const tokenData = JSON.parse(atob(token.split('.')[1]));
-        const now = new Date().getTime() / 1000;
-        return tokenData.exp > now;
+    getTasksFromLocalStorage(): Task[] {
+        return JSON.parse(localStorage.getItem(TASKS_KEY_NAME) || '[]');
     }
 
     getTasks(token: string): Observable<Task[] | ApiResponse> {
@@ -63,7 +47,11 @@ export class TasksService {
                 Authorization: `Bearer ${token}`,
             },
         }).pipe(
-            tap((task) => this.setTasks([task])),
+            tap((newTask) => {
+                const tasks = JSON.parse(localStorage.getItem(TASKS_KEY_NAME) || '[]');
+                tasks.push(newTask);
+                this.setTasks(tasks);
+            }),
             catchError(
                 error => this._httpErrorHandler.handleErrorHttpRequest(error)
             )
@@ -76,7 +64,12 @@ export class TasksService {
                 Authorization: `Bearer ${token}`,
             },
         }).pipe(
-            tap((task) => this.setTasks([task])),
+            tap((_) => {
+                const tasks = JSON.parse(localStorage.getItem(TASKS_KEY_NAME) || '[]');
+                const taskIndex = tasks.findIndex((t: Task) => t.taskId === taskId);
+                tasks[taskIndex] = task;
+                this.setTasks(tasks);
+            }),
             catchError(
                 error => this._httpErrorHandler.handleErrorHttpRequest(error)
             )
@@ -89,7 +82,12 @@ export class TasksService {
                 Authorization: `Bearer ${token}`,
             },
         }).pipe(
-            // tap((task) => this.setTasks([task])),
+            tap((_) => {
+                const tasks = JSON.parse(localStorage.getItem(TASKS_KEY_NAME) || '[]');
+                const taskIndex = tasks.findIndex((t: Task) => t.taskId === taskId);
+                tasks.splice(taskIndex, 1);
+                this.setTasks(tasks);
+            }),
             catchError(
                 error => this._httpErrorHandler.handleErrorHttpRequest(error)
             )
