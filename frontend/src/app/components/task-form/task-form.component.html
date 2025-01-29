@@ -1,0 +1,22 @@
+<div class="w-full bg-white p-6 rounded-lg shadow-md h-fit sticky top-20">
+    <h2 class="text-xl font-bold mb-4 text-blue-700 truncate"
+        [title]="taskToEdit ? 'Editar tarea ' + taskToEdit.title : 'Agregar nueva tarea'">
+        {{ taskToEdit ? 'Editar tarea "' + taskToEdit.title + '"' : 'Agregar nueva tarea' }}
+    </h2>
+    <form [formGroup]="taskForm" (ngSubmit)="addTask()">
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Título</label>
+            <input formControlName="title" type="text"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm" />
+        </div>
+        <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700">Descripción</label>
+            <textarea formControlName="description" rows="3"
+                class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"></textarea>
+        </div>
+        <button type="submit" [disabled]="taskForm.invalid"
+            class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 w-full disabled:opacity-50">
+            {{ taskToEdit ? 'Guardar cambios' : 'Agregar tarea' }}
+        </button>
+    </form>
+</div>

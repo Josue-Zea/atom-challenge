@@ -39,8 +39,15 @@ export const getTasks = async (req: Request, res: Response) => {
             return;
         }
 
-        const tasks = await getTasksService(payload.id);
-        res.status(200).send({ tasks });
+        const tasksObject = await getTasksService(payload.id);
+
+        const tasksArray = Object.entries(tasksObject).map(([taskId, task]) => ({
+            taskId,
+            ...task,
+            creation_date: new Date(task.creation_date.seconds * 1000 + task.creation_date.nanoseconds / 1e6)
+        }));
+
+        res.status(200).send(tasksArray);
     } catch (error) {
         res.status(500).send({ message: "Error while retrieving tasks", error });
     }
