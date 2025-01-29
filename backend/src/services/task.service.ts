@@ -22,7 +22,7 @@ export const createTask = async (userId: string, task: Task): Promise<DocumentRe
     return await addDoc(tasksCollectionRef, task);
 };
 
-export const getTasks = async (userId: string): Promise<Record<string, Task>> => {
+export const getTasks = async (userId: string): Promise<Record<string, any>> => {
     const tasksCollectionRef = collection(
         db,
         COLLECTIONS.USERS_COLLECTION,
@@ -36,7 +36,6 @@ export const getTasks = async (userId: string): Promise<Record<string, Task>> =>
     tasksSnapshot.forEach((doc) => {
         tasks[doc.id] = doc.data() as Task;
     });
-
     return tasks;
 };
 
