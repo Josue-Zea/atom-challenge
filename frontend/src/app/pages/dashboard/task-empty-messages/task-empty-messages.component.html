@@ -1,0 +1,11 @@
+<p *ngIf="filteredTasks.length === 0 && showCompleted"
+    class="text-gray-600 text-center mt-6 flex flex-col items-center">
+    <span class="text-lg font-semibold">¡Aun no tienes tareas completadas!</span>
+    <span class="text-sm text-gray-500">Marcalas como completadas para poder verlas aquí.</span>
+</p>
+
+<p *ngIf="filteredTasks.length === 0 && !showCompleted"
+    class="text-gray-600 text-center mt-6 flex flex-col items-center">
+    <span class="text-lg font-semibold">¡Genial!</span>
+    <span class="text-sm text-gray-500">No tienes tareas pendientes por completar.</span>
+</p>

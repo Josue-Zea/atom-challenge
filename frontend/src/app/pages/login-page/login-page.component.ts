@@ -24,23 +24,30 @@ export class LoginPageComponent {
     });
   }
 
+  ngOnInit(): void {
+    this.redirectIfAuthenticated();
+  }
+
+  redirectIfAuthenticated() {
+    if (this._authService.getToken()) {
+      this._router.navigate(['/dashboard']);
+    }
+  }
+
   get email() {
     return this.loginForm.get('email');
   }
 
-  getEmailErrorMessage() {
-    if (this.email?.hasError('required')) {
-      return 'El email es obligatorio.';
-    }
-    if (this.email?.hasError('email')) {
-      return 'Por favor introduce un email válido.';
-    }
+  get emailErrorMessage(): string {
+    if (this.email?.hasError('required')) return 'El email es obligatorio.';
+    if (this.email?.hasError('email')) return 'Por favor introduce un email válido.';
     return '';
   }
 
   async onSubmit(): Promise<void> {
     if (!this.loginForm.valid) { return; }
     this.loading = true;
+
     this._authService
       .login(this.loginForm.value)
       .subscribe(async (res: AuthResponse | ApiResponse) => {

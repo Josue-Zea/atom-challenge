@@ -15,6 +15,7 @@ import { TaskFormComponent } from './components/task-form/task-form.component';
 import { FullpageLoaderComponent } from './components/fullpage-loader/fullpage-loader.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { TasksListHeaderComponent } from './pages/dashboard/tasks-list-header/tasks-list-header.component';
+import { TaskEmptyMessagesComponent } from './pages/dashboard/task-empty-messages/task-empty-messages.component';
 
 export const CONSTANTS = 'CONSTANTS';
 
@@ -27,7 +28,8 @@ export const CONSTANTS = 'CONSTANTS';
     TaskFormComponent,
     FullpageLoaderComponent,
     NavbarComponent,
-    TasksListHeaderComponent
+    TasksListHeaderComponent,
+    TaskEmptyMessagesComponent
   ],
   imports: [
     BrowserModule,

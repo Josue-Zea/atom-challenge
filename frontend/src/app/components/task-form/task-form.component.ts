@@ -42,45 +42,41 @@ export class TaskFormComponent {
     const token = this._authService.getToken();
     if (!token) { return; }
     this.loadingChange.emit(true);
-    
-    if (this.isEditing && this.taskToEdit) {
-      const newTaskToEdit: Task = {
-        title: this.taskForm.value.title,
-        description: this.taskForm.value.description,
-        completed: this.taskToEdit.completed,
-        creation_date: this.taskToEdit.creation_date,
-    }
-      this._tasksService.editTask(this.taskToEdit.taskId ?? "", newTaskToEdit, token)
-      .subscribe(async (res: Task | ApiResponse) => {
-        this.loadingChange.emit(false);
-        if ((res as ApiResponse).status === 500) {
-          SmallIconAllert('error', 'Ha ocurrido un error al editar');
-          return;
-        } else {
-          SmallIconAllert('success', 'Tarea editada correctamente');
-          this.reloadData.emit();
-        }
-      });
-    } else {
-      const newTask: Task = {
-        title: this.taskForm.value.title,
-        description: this.taskForm.value.description,
-        creation_date: new Date(),
-        completed: false,
-      };
-      this._tasksService.createTask(newTask, token)
-        .subscribe(async (res: Task | ApiResponse) => {
-          this.loadingChange.emit(false);
-          if ((res as ApiResponse).status === 500) {
-            SmallIconAllert('error', 'Ha ocurrido un error al crear la tarea');
-            return;
-          } else {
-            SmallIconAllert('success', 'Tarea creada correctamente');
-            this.reloadData.emit();
-          }
-        })
-    }
+
+    const taskData: Task = {
+      title: this.taskForm.value.title,
+      description: this.taskForm.value.description,
+      completed: this.taskToEdit?.completed ?? false,
+      creation_date: this.taskToEdit?.creation_date ?? new Date(),
+    };
+
+    const request$ = this.isEditing && this.taskToEdit
+      ? this._tasksService.editTask(this.taskToEdit.taskId ?? "", taskData, token)
+      : this._tasksService.createTask(taskData, token);
+
+    request$.subscribe((res) => this.handleApiResponse(res, this.isEditing ? 'editar' : 'crear'));
 
     this.taskForm.reset();
+
+    this.taskForm.reset();
+  }
+
+  private handleApiResponse(res: Task | ApiResponse, action: string): void {
+    this.setLoading(false);
+
+    if ('status' in res && res.status === 500) {
+      SmallIconAllert('error', `Ha ocurrido un error al ${action} la tarea`);
+      return;
+    }
+
+    SmallIconAllert('success', `Tarea ${action} correctamente`);
+    this.reloadData.emit();
+  }
+
+  private setLoading(state: boolean): void {
+    if (this.loading !== state) {
+      this.loading = state;
+      this.loadingChange.emit(state);
+    }
   }
 }

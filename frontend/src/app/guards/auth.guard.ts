@@ -25,7 +25,7 @@ export class AuthGuard implements CanActivate {
     }
 
     if (!this._authService.validateTokenTime()) {
-      this._authService.logout();
+      this._authService.sesionExpired();
       return false;
     }
 
